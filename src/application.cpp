@@ -4,7 +4,7 @@
 namespace yave {
 
 void Application::run() {
-  yaveVulkanInstance VI = yaveVulkanInstance();
+  YaveVulkanInstance VI = YaveVulkanInstance();
 
   while (!yaveWindow.shouldClose()) {
     glfwPollEvents();

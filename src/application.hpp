@@ -1,6 +1,7 @@
 #pragma once
 
 #include "yave_window.hpp"
+#include "yave_graphics_pipeline.hpp"
 
 namespace yave {
 class Application {
@@ -12,6 +13,7 @@ class Application {
 
     private:
         YaveWindow yaveWindow{WIDTH, HEIGHT, "Hello Vulkan!"};
+        YaveGrPipeline yavePipeline{"shaders/shader.vert.spv","shaders/shader.frag.spv"};
 
 };
 } // namespace yave
