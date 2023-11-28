@@ -33,3 +33,7 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
     ${GLFW_LIBRARIES}
     ${Vulkan_LIBRARIES}
     ${GLM_LIBRARY_DIRS})
+
+add_custom_command(TARGET ${PROJECT_NAME}
+    PRE_BUILD
+    COMMAND ./compile_shaders.sh)
