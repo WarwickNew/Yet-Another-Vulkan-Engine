@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstring>
 #include <stdexcept>
 #include <vector>
 #include <vulkan/vulkan.h>
@@ -16,7 +17,7 @@ private:
   void destroyInstance();
 
   // Validation support
-  bool checkLayersValidSuppport();
+  bool checkLayersValidSuppport(VkInstanceCreateInfo &createInfo);
   const std::vector<const char *> validationLayers = {
       "VK_LAYER_KHRONOS_validation"};
 #ifdef NDEBUG // Enable Validation in debug mode

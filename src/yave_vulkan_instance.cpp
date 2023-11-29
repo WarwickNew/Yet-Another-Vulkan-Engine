@@ -7,7 +7,6 @@ YaveVulkanInstance::YaveVulkanInstance() { createInstance(); }
 YaveVulkanInstance::~YaveVulkanInstance() { destroyInstance(); }
 
 void YaveVulkanInstance::createInstance() {
-  checkLayersValidSuppport();
   VkApplicationInfo appInfo{};
   appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
   appInfo.pApplicationName = "Hello Triangle";
@@ -28,7 +27,7 @@ void YaveVulkanInstance::createInstance() {
   createInfo.enabledExtensionCount = glfwExtensionCount;
   createInfo.ppEnabledExtensionNames = glfwExtensions;
 
-  createInfo.enabledLayerCount = 0;
+  checkLayersValidSuppport(createInfo);
 
   if (vkCreateInstance(&createInfo, nullptr, &instance) != VK_SUCCESS) {
     throw std::runtime_error("failed to create vulkan instance!");
@@ -39,12 +38,39 @@ void YaveVulkanInstance::destroyInstance() {
   vkDestroyInstance(this->instance, nullptr);
 }
 
-bool YaveVulkanInstance::checkLayersValidSuppport() {
-  // Continue if validation is disabled
-  if (this->enableValidationLayers) {
-    throw std::runtime_error("validation layers requested, but not available!");
-    return false;
+bool YaveVulkanInstance::checkLayersValidSuppport(
+    VkInstanceCreateInfo &createInfo) {
+  // Finish if validation is disabled (Release mode)
+  if (!this->enableValidationLayers) {
+    createInfo.enabledLayerCount = 0;
+    return true;
   }
+  // Get layers
+  uint32_t layerCount;
+  vkEnumerateInstanceLayerProperties(&layerCount, nullptr);
+  std::vector<VkLayerProperties> availableLayers(layerCount);
+  vkEnumerateInstanceLayerProperties(&layerCount, availableLayers.data());
+
+  // Validate layers
+  for (const char *layerName : validationLayers) {
+    bool layerFound = false;
+
+    for (const auto &layerProperties : availableLayers) {
+      if (strcmp(layerName, layerProperties.layerName) == 0) {
+        layerFound = true;
+        break;
+      }
+    }
+
+    if (!layerFound) {
+      return false;
+    }
+  }
+
+  return true;
+
+  createInfo.enabledLayerCount = static_cast<uint32_t>(validationLayers.size());
+  createInfo.ppEnabledLayerNames = validationLayers.data();
   return true;
 }
 
