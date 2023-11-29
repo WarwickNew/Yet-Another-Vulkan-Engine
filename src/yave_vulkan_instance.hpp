@@ -9,13 +9,20 @@
 namespace yave {
 class YaveVulkanInstance {
 
-  private:
-    VkInstance instance;
+private:
+  VkInstance instance;
 
-    void createInstance();
+  void createInstance();
 
-  public:
-    YaveVulkanInstance();
+  void destroyInstance();
 
+public:
+  // Delete Copy constructors
+  // This class should match one to one with vulkan instances
+  YaveVulkanInstance(const YaveVulkanInstance&) = delete;
+  YaveVulkanInstance &operator=(const YaveVulkanInstance &) = delete;
+
+  YaveVulkanInstance();
+  ~YaveVulkanInstance();
 };
 } // namespace yave

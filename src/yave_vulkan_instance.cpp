@@ -1,8 +1,10 @@
 #include "yave_vulkan_instance.hpp"
+#include <vulkan/vulkan_core.h>
 
 namespace yave {
 
 YaveVulkanInstance::YaveVulkanInstance() { createInstance(); }
+YaveVulkanInstance::~YaveVulkanInstance() { destroyInstance(); }
 
 void YaveVulkanInstance::createInstance() {
   VkApplicationInfo appInfo{};
@@ -30,6 +32,10 @@ void YaveVulkanInstance::createInstance() {
   if (vkCreateInstance(&createInfo, nullptr, &instance) != VK_SUCCESS) {
     throw std::runtime_error("failed to create vulkan instance!");
   }
+}
+
+void YaveVulkanInstance::destroyInstance() {
+  vkDestroyInstance(this->instance, nullptr);
 }
 
 } // namespace yave
