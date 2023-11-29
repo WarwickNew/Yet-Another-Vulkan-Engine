@@ -7,6 +7,7 @@ YaveVulkanInstance::YaveVulkanInstance() { createInstance(); }
 YaveVulkanInstance::~YaveVulkanInstance() { destroyInstance(); }
 
 void YaveVulkanInstance::createInstance() {
+  checkLayersValidSuppport();
   VkApplicationInfo appInfo{};
   appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
   appInfo.pApplicationName = "Hello Triangle";
@@ -36,6 +37,15 @@ void YaveVulkanInstance::createInstance() {
 
 void YaveVulkanInstance::destroyInstance() {
   vkDestroyInstance(this->instance, nullptr);
+}
+
+bool YaveVulkanInstance::checkLayersValidSuppport() {
+  // Continue if validation is disabled
+  if (this->enableValidationLayers) {
+    throw std::runtime_error("validation layers requested, but not available!");
+    return false;
+  }
+  return true;
 }
 
 } // namespace yave

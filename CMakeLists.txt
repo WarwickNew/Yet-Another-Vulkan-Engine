@@ -1,13 +1,18 @@
 cmake_minimum_required(VERSION 3.16)
+
+# set toolchain file
+set(CMAKE_TOOLCHAIN_FILE "${CMAKE_CURRENT_SOURCE_DIR}/toolchain.cmake"
+    CACHE PATH "Path to the desired toolchain file.")
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+set(CMAKE_CXX_CLANG_TIDY)
+
 project(yave
     VERSION 0
     DESCRIPTION "Yet Another Vulkan Engine"
     HOMEPAGE_URL "https://git.warwicknew.xyz/yave/"
     LANGUAGES C CXX)
-
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-set(CMAKE_CXX_CLANG_TIDY)
 
 file(GLOB_RECURSE SOURCE_FILES
     ${CMAKE_SOURCE_DIR}/src/*.c
