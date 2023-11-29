@@ -27,6 +27,8 @@ void YaveVulkanInstance::createInstance() {
   createInfo.enabledExtensionCount = glfwExtensionCount;
   createInfo.ppEnabledExtensionNames = glfwExtensions;
 
+  createInfo.enabledLayerCount = 0;
+
   checkLayersValidSuppport(createInfo);
 
   if (vkCreateInstance(&createInfo, nullptr, &instance) != VK_SUCCESS) {
