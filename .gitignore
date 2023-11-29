@@ -1,3 +1,17 @@
 # Ignore build directories
 build/
 .cache/
+
+# CMake mess for lazy cmake usage
+CMakeCache.txt
+CMakeFiles/
+Makefile
+cmake_install.cmake
+compile_commands.json
+
+# Compiled Shaders
+shaders/*.spv
+shaders/*.spv
+
+# Binaries
+yave
