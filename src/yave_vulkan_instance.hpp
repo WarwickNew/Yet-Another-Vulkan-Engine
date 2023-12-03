@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstring>
+#include <optional>
 #include <stdexcept>
 #include <vector>
 #include <vulkan/vulkan.h>
@@ -9,12 +10,28 @@
 #include <GLFW/glfw3.h>
 
 namespace yave {
+
+struct QueueFamilyIndices {
+  std::optional<uint32_t> graphicsFamily;
+
+  bool isComplete() { return graphicsFamily.has_value(); }
+};
+
 class YaveVulkanInstance {
 
 private:
   VkInstance instance;
+  VkPhysicalDevice physicalDevice;
+
+  // Vulkan instance
   void createInstance();
   void destroyInstance();
+
+  // TODO: Move Physical device code to it's own class
+  // Physical device
+  void pickPhysicalDevice();
+  bool isDeviceSuitable(VkPhysicalDevice device);
+  QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device);
 
   // Validation support
   bool checkLayersValidSuppport(VkInstanceCreateInfo &createInfo);
