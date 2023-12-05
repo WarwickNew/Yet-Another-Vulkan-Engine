@@ -7,8 +7,12 @@ namespace yave {
 YaveVulkanInstance::YaveVulkanInstance() {
   createInstance();
   pickPhysicalDevice();
+  createLogicalDevice();
 }
-YaveVulkanInstance::~YaveVulkanInstance() { destroyInstance(); }
+YaveVulkanInstance::~YaveVulkanInstance() {
+  destroyLogicalDevice();
+  destroyInstance();
+}
 
 void YaveVulkanInstance::createInstance() {
   VkApplicationInfo appInfo{};
@@ -139,12 +143,60 @@ YaveVulkanInstance::findQueueFamilies(VkPhysicalDevice device) {
       indices.graphicsFamily = i;
     }
     // If we know we have support we don't need to look for anything more
-    if(indices.isComplete()){
+    if (indices.isComplete()) {
       break;
     }
     i++;
   }
   return indices;
+}
+
+void YaveVulkanInstance::createLogicalDevice() {
+  QueueFamilyIndices indices = findQueueFamilies(physicalDevice);
+
+  // Only need a single queue as we can feed it with multiple threads and
+  // trigger it from the main thread to start off with.
+  VkDeviceQueueCreateInfo queueCreateInfo{};
+  queueCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
+  queueCreateInfo.queueFamilyIndex = indices.graphicsFamily.value();
+  queueCreateInfo.queueCount = 1;
+  // Since we only have one queue it has all the priority.
+  float queuePriority = 1.0f;
+  queueCreateInfo.pQueuePriorities = &queuePriority;
+
+  // TODO: set up device with interesting features as we use them
+  VkPhysicalDeviceFeatures deviceFeatures{};
+
+  // Create logical device.
+  VkDeviceCreateInfo createInfo{};
+  createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
+  createInfo.pQueueCreateInfos = &queueCreateInfo;
+  createInfo.queueCreateInfoCount = 1;
+  createInfo.pEnabledFeatures = &deviceFeatures;
+
+  // TODO: Require specific features when we need some
+  // Device specific create information
+  createInfo.enabledExtensionCount = 0;
+  if (enableValidationLayers) {
+    createInfo.enabledLayerCount =
+        static_cast<uint32_t>(validationLayers.size());
+    createInfo.ppEnabledLayerNames = validationLayers.data();
+  } else {
+    createInfo.enabledLayerCount = 0;
+  }
+
+  // Create logical device
+  if (vkCreateDevice(physicalDevice, &createInfo, nullptr, &device) !=
+      VK_SUCCESS) {
+    throw std::runtime_error("failed to create logical device!");
+  }
+
+  // Whilst we're here we might as well set up our queue
+  vkGetDeviceQueue(device, indices.graphicsFamily.value(), 0, &graphicsQueue);
+}
+
+void YaveVulkanInstance::destroyLogicalDevice() {
+  vkDestroyDevice(device, nullptr);
 }
 
 } // namespace yave

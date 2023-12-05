@@ -22,6 +22,8 @@ class YaveVulkanInstance {
 private:
   VkInstance instance;
   VkPhysicalDevice physicalDevice;
+  VkDevice device;
+  VkQueue graphicsQueue;
 
   // Vulkan instance
   void createInstance();
@@ -32,6 +34,11 @@ private:
   void pickPhysicalDevice();
   bool isDeviceSuitable(VkPhysicalDevice device);
   QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device);
+
+  // TODO: Move Logical device code to it's own class
+  // Logical device
+  void createLogicalDevice();
+  void destroyLogicalDevice();
 
   // Validation support
   bool checkLayersValidSuppport(VkInstanceCreateInfo &createInfo);
