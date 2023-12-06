@@ -18,7 +18,7 @@ private:
   std::string windowName;
 
 public:
-  // Delete Copy constructors 
+  // Delete Copy constructors
   // This class should match one to one with glfw window instances
   YaveWindow(const YaveWindow &) = delete;
   YaveWindow &operator=(const YaveWindow &) = delete;
@@ -26,6 +26,8 @@ public:
   // Initialiser and destructor
   YaveWindow(int w, int h, std::string name);
   ~YaveWindow();
+
+  GLFWwindow *getGLFWWindow() { return window; }
 
   // Tell apllicaton that the user has attempted to close the window
   bool shouldClose() { return glfwWindowShouldClose(window); }

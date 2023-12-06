@@ -49,6 +49,7 @@ public:
   YaveVulkanInstance(const YaveVulkanInstance &) = delete;
   YaveVulkanInstance &operator=(const YaveVulkanInstance &) = delete;
 
+  VkInstance *getVkInstance(){return &instance;}
   YaveVulkanInstance();
   ~YaveVulkanInstance();
 };
